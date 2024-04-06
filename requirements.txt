@@ -1,5 +1,5 @@
 streamlit
 transformers
-tensowflow
+tensorflow
 Pillow
 pytest==7.1.3
