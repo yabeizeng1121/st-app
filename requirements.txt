@@ -1,6 +1,5 @@
 streamlit
 transformers
-pytorch
 tensowflow
 Pillow
 pytest==7.1.3
