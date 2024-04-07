@@ -1,6 +1,19 @@
 import streamlit as st
-from utils.chatbot import get_chatbot_response
+from transformers import pipeline, Conversation
 import json
+
+# Initialize the chatbot model when the script is loaded
+chatbot = pipeline("conversational", model="microsoft/DialoGPT-large")
+
+
+def get_chatbot_response(user_input):
+    try:
+        conversation = Conversation(user_input)
+        chatbot(conversation)
+        return conversation.generated_responses[-1]
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
+        return "Sorry, I am unable to respond right now."
 
 
 def load_streamlit_updates():
@@ -18,7 +31,6 @@ def main():
         page_title="Streamlit Chatbot", layout="wide", initial_sidebar_state="expanded"
     )
 
-    # Custom CSS to emulate the design from the provided image
     st.markdown(
         """
         <style>
@@ -38,14 +50,12 @@ def main():
                 padding-bottom: 5rem;
             }
         </style>
-    """,
+        """,
         unsafe_allow_html=True,
     )
 
-    # Load updates and handle chat
     updates = load_streamlit_updates()
 
-    # Sidebar
     with st.sidebar:
         st.image("assets/images/logo.png", width=100)
         st.header("Streamlit Chatbot")
@@ -67,7 +77,7 @@ def main():
 
     user_input = st.text_input("Ask me anything:")
     if user_input:
-        response = get_chatbot_response(user_input)  # Integrate update retrieval here
+        response = get_chatbot_response(user_input)
         st.write(response)
 
 
